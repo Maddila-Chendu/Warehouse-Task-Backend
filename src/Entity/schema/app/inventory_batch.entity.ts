@@ -27,9 +27,6 @@ export class InventoryBatch {
   expiryDate: Date;             
 
   @CreateDateColumn()
-  receivedAt: Date;
-
-  @CreateDateColumn()
   createdAt: Date;
 
   @OneToMany(() => InventoryLog, (log) => log.batch)

@@ -18,3 +18,31 @@ export const addProduct = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error at adding Product", errorDetails: error.message });
     }
 }
+
+export const getProducts = async (req: Request, res: Response) => {
+    try {
+        const productRepository = database.getRepository(Product);  
+        const products = await productRepository.find();
+        res.status(200).json({ message: "Products Retrieved Successfully", data: products });
+    }
+    catch (error) {
+        console.error("Error at retrieving Products:", error);
+        res.status(500).json({ message: "Error at retrieving Products", errorDetails: error instanceof Error ? error.message : String(error) });
+    }   
+}
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params;
+        const productRepository = database.getRepository(Product);
+        const product = await productRepository.findOneBy({ id: productId as string });
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        await productRepository.remove(product);
+        res.status(200).json({ message: "Product Deleted Successfully" });
+    } catch (error) {
+        console.error("Error at deleting Product:", error);
+        res.status(500).json({ message: "Error at deleting Product", errorDetails: error instanceof Error ? error.message : String(error) });
+    }   
+}

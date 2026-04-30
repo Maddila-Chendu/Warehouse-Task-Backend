@@ -29,8 +29,12 @@ const ensureDatabase = async (req: Request, res: Response, next: any) => {
 app.use(ensureDatabase);
 
 app.use('/product', productRouter);
+app.use('/getProduct', productRouter);
+app.use('/deleteProduct', productRouter);
 app.use('/IBatch', inventoryBatchRouter);
+app.use('/getIBatch', inventoryBatchRouter);
 app.use('/orders', ordersRouter);
+app.use('/getOrders', ordersRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/update', updateRouter);

@@ -26,3 +26,15 @@ export const addInventoryBatch = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error at adding Inventory Batch", errorDetails: (error as Error).message });
     }
 }
+
+export const getInventoryBatches = async (req: Request, res: Response) => {
+    try {
+        const batchRepository = database.getRepository(InventoryBatch);
+        const batches = await batchRepository.find({ relations: ['product'] });
+        res.status(200).json({ message: "Inventory Batches Retrieved Successfully", data: batches });
+    }
+    catch (error) {
+        console.error("Error at retrieving Inventory Batches:", error);
+        res.status(500).json({ message: "Error at retrieving Inventory Batches", errorDetails: (error as Error).message });
+    }
+}

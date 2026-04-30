@@ -108,3 +108,15 @@ export const createOrder = async (req: Request, res: Response) => {
         await queryRunner.release();
     }
 };
+
+export const getOrders = async (req: Request, res: Response) => {
+    try {
+        const orderRepository = database.getRepository(Order);
+        const orders = await orderRepository.find({ relations: ['product', 'inventoryLogs'] });
+        res.status(200).json({ message: "Orders Retrieved Successfully", data: orders });
+    }   
+    catch (error) {
+        console.error("Error at retrieving Orders:", error);
+        res.status(500).json({ message: "Error at retrieving Orders", errorDetails: (error as Error).message });
+    }
+}
