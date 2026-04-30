@@ -4,15 +4,37 @@ import cors from 'cors';
 import productRouter from '../API/V1/products/product.router';
 import inventoryBatchRouter from '../API/V1/inventory/inventory_batch.router';
 import ordersRouter from '../API/V1/orders/orders.router';
+import loginRouter from '../API/V1/Users/login/login.router';
+import registerRouter from '../API/V1/Users/Register/register.router';
+import updateRouter from '../API/V1/Users/Update/update.router';
+import deleteRouter from '../API/V1/Users/Delete/delete.router';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 const port = 8080;
+const ensureDatabase = async (req: Request, res: Response, next: any) => {
+  try {
+    if (!database.isInitialized) {
+      await database.initialize();
+    }
+    next();
+  } catch (error) {
+    const err = error as Error;
+    console.error("Database initialization error:", err);
+    res.status(500).json({ error: "Database connection failed", details: err.message });
+  }
+};
+
+app.use(ensureDatabase);
 
 app.use('/product', productRouter);
 app.use('/IBatch', inventoryBatchRouter);
 app.use('/orders', ordersRouter);
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
+app.use('/update', updateRouter);
+app.use('/delete', deleteRouter);
 
 
 app.get("/api", async (req: Request, res: Response) => {
