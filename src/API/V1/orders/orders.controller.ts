@@ -47,10 +47,16 @@ export const createOrder = async (req: Request, res: Response) => {
         if (totalAvailable < quantityRequested) {
             await queryRunner.rollbackTransaction();
             return res.status(400).json({ 
-                message: `Insufficient stock available. Non-expired stock: ${totalAvailable}, Expired stock ignored: ${totalExpired}` 
+                message: `Insufficient stock available - Order upto ${totalAvailable} units` 
             });
         }
-
+        if (totalAvailable<=0) {
+        
+            await queryRunner.rollbackTransaction();
+            return res.status(400).json({ 
+                message: `Insufficient stock for this product` 
+            });
+        }
         const expiryStockRepository = queryRunner.manager.getRepository(ExpiryStock);
         
         for (const expiredBatch of expiredBatches) {

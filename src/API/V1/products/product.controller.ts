@@ -5,8 +5,8 @@ import { Product } from "../../../Entity/schema/app/product.entity";
 export const addProduct = async (req: Request, res: Response) => {
     try {
         const { name, description } = req.body;
-        const productRepository = database.getRepository(Product);
-        const product = productRepository.create({ name, description });
+        const productRepository =  database.getRepository(Product);
+        const product = await productRepository.create({ name, description });
         await productRepository.save(product);
         res.status(201).json({ message: "Product Added Successfully", data: product });
     } catch (error: any) {

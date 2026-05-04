@@ -12,21 +12,6 @@ import deleteRouter from '../API/V1/Users/Delete/delete.router';
 const app = express();
 app.use(cors());
 app.use(express.json());
-const port = 8080;
-const ensureDatabase = async (req: Request, res: Response, next: any) => {
-  try {
-    if (!database.isInitialized) {
-      await database.initialize();
-    }
-    next();
-  } catch (error) {
-    const err = error as Error;
-    console.error("Database initialization error:", err);
-    res.status(500).json({ error: "Database connection failed", details: err.message });
-  }
-};
-
-app.use(ensureDatabase);
 
 app.use('/product', productRouter);
 app.use('/getProduct', productRouter);
@@ -40,20 +25,32 @@ app.use('/register', registerRouter);
 app.use('/update', updateRouter);
 app.use('/delete', deleteRouter);
 
-
-app.get("/api", async (req: Request, res: Response) => {
+app.get('/api', async (req: Request, res: Response) => {
   try {
     if (!database.isInitialized) {
       await database.initialize();
     }
-    res.status(200).json({ message: "Database connected successfully!" });
+    res.status(200).json({ message: 'Database connected successfully!' });
   } catch (error) {
     const err = error as Error;
-    console.error("Error during DataSource initialization:", err);
-    res.status(500).json({ message: "Failed to connect to the database.", error: err.message });
+    console.error('Error during DataSource initialization:', err);
+    res.status(500).json({ message: 'Failed to connect to the database.', error: err.message });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+const startServer = async () => {
+  try {
+    if (!database.isInitialized) {
+      await database.initialize();
+    }
+    app.listen(8080, () => {
+      console.log('Server is running on http://localhost:8080');
+    });
+  } catch (error) {
+    const err = error as Error;
+    console.error('Failed to initialize database and start server:', err);
+    process.exit(1);
+  }
+};
+
+startServer();
