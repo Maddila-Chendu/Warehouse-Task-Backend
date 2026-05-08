@@ -1,21 +1,29 @@
 import { Request,Response } from "express";
 import database from "../../../database/connect";
 import { InventoryBatch } from "../../../Entity/schema/app/inventory_batch.entity";
-import { Product } from "../../../Entity/schema/app/product.entity";    
+import { Product } from "../../../Entity/schema/app/product.entity";
+import { BinEntity } from "../../../Entity/schema/app/bins.entity";
 
 export const addInventoryBatch = async (req: Request, res: Response) => {
     try {
-        const { productId, quantity, expiryDate } = req.body;
+        const { productId, quantity, bin_name, expiryDate } = req.body;
         const productRepository = database.getRepository(Product);
         const product = await productRepository.findOneBy({ id: productId });
         if (!product) {
             res.status(404).json({ message: "Product not found!" });
             return;
         }
+        const binRepository = database.getRepository(BinEntity);
+        const bin = await binRepository.findOneBy({ bin_name });
+        if (!bin) {
+            res.status(404).json({ message: "Bin not found!" });
+            return;
+        }
         const batchRepository = database.getRepository(InventoryBatch);
         const batch = batchRepository.create({
             product,
             quantity,
+            bin_name,
             remainingQuantity: quantity,
             expiryDate: new Date(expiryDate)
         });
@@ -38,3 +46,5 @@ export const getInventoryBatches = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error at retrieving Inventory Batches", errorDetails: (error as Error).message });
     }
 }
+
+

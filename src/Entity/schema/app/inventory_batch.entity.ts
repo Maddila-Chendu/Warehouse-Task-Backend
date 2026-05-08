@@ -23,6 +23,9 @@ export class InventoryBatch {
   @Column({ type: 'int' })
   remainingQuantity: number;    
 
+  @Column({ nullable: true })
+  bin_name: string;
+
   @Column({ type: 'date' })
   expiryDate: Date;             
 

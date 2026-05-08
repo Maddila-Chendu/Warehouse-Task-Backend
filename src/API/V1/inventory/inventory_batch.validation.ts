@@ -11,8 +11,8 @@ export const validateInventoryBatch = (req: Request, res: Response, next: NextFu
     else if (isNaN(Date.parse(expiryDate))) {
         return res.status(400).json({ message: "Expiry Date must be a valid date" });
     }
-    else if (productId != req.body.productId && productId != req.body.ProductId && productId != req.body.productID) {
-        return res.status(400).json({ message: "Enter a correct Product ID" });
+    else if (!req.body.bin_name) {
+        return res.status(400).json({ message: "Bin Name is required" });
     }
     next();
 }

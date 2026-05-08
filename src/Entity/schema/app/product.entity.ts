@@ -17,6 +17,9 @@ export class Product {
   @Column({ nullable: true })
   description: string;
 
+  // @OneToMany(() => BinEntity, (bin) => bin.product)
+  // bins: BinEntity[];
+
   @CreateDateColumn()
   createdAt: Date;
 

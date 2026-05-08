@@ -5,8 +5,8 @@ export const validateProduct = (req: Request, res: Response, next: NextFunction)
     if (!name || !description) {
         return res.status(400).json({ message: "Name and Description are required" });
     }
-    else if(name != req.body.name && name != req.body.Name && name != req.body.name){
-        return res.status(400).json({ message: "Enter a correct Name" });
+    else if (!req.body.name) {
+        return res.status(400).json({ message: "Name is required" });
     }
     next();
 }

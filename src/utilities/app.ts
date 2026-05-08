@@ -8,6 +8,7 @@ import loginRouter from '../API/V1/Users/login/login.router';
 import registerRouter from '../API/V1/Users/Register/register.router';
 import updateRouter from '../API/V1/Users/Update/update.router';
 import deleteRouter from '../API/V1/Users/Delete/delete.router';
+import binsRouter from '../API/V1/bins/bins.router';
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,9 @@ app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/update', updateRouter);
 app.use('/delete', deleteRouter);
+app.use('/bins', binsRouter);
+app.use('/getBins', binsRouter);
+
 
 app.get('/api', async (req: Request, res: Response) => {
   try {
